@@ -1,15 +1,9 @@
-# hanzgeeratz.github.io
-Personal website
-
-
-
-# Hello!
+# Hello
 
 TL;DR: I'm Hanz Geeratz, a Fractional CTO and Startup Scaling & Growth Consultant with over 20 years of experience in tech leadership and startups.
-I specialize in scaling development teams and aligning diverse strategies with robust engineering execution. Off-duty, I'm family-focused, practice secular Buddhism, and am restoring my traditional Dutch sailing boat. I'm open for freelance work.
+I specialize in scaling development teams and aligning diverse strategies with robust engineering execution. Off-duty, I'm family-focused, practice secular Buddhism, and am restoring my traditional Dutch sailing boat. I'm open to freelance work.
 
-CONTACT:You can find me on <a href="https://de.linkedin.com/in/hanz-geeratz" target="_blank" rel="noopener noreferrer">LinkedIn</a>. eMail: hnzgeeratz/@/proton.me
-
+CONTACT:You can find me onLinkedIn:  <https://de.linkedin.com/in/hanz-geeratz>. eMail: hnzgeeratz/@/proton.me
 
 ## ABOUT ME
 
@@ -19,7 +13,7 @@ For the last four years, I served as CTO at Wunder Mobility, gaining extensive e
 
 Throughout my career, I've also been strategically involved in startup due diligence, funding rounds, and M&A transactions. I excel at smartly growing teams, optimizing and rightsizing them, and providing crisis solutions, including reorganizing engineering teams based on evolving business needs.
 
-I am open for freelance work, offering services in:
+## I am open for freelance work, offering services in
 
     - CTO/VP Engineering as a Service: Providing strategic technical leadership for startups and growing companies.
     - High-Performing Team Leadership & Optimization: Building, mentoring, and reorganizing engineering teams for smart growth, efficiency, and crisis management.
