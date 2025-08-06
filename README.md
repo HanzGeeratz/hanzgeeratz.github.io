@@ -2,6 +2,7 @@
 Personal website
 
 
+
 # Hello!
 
 TL;DR: I'm Hanz Geeratz, a Fractional CTO and Startup Scaling & Growth Consultant with over 20 years of experience in tech leadership and startups.
