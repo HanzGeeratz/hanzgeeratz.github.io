@@ -2,11 +2,15 @@
 Personal website
 
 
-Hello!
+# Hello!
 
 TL;DR: I'm Hanz Geeratz, a Fractional CTO and Startup Scaling & Growth Consultant with over 20 years of experience in tech leadership and startups.
 I specialize in scaling development teams and aligning diverse strategies with robust engineering execution. Off-duty, I'm family-focused, practice secular Buddhism, and am restoring my traditional Dutch sailing boat. I'm open for freelance work.
-⭐ ABOUT ME ⭐
+
+CONTACT:You can find me on <a href="https://de.linkedin.com/in/hanz-geeratz" target="_blank" rel="noopener noreferrer">LinkedIn</a>. eMail: hnzgeeratz/@/proton.me
+
+
+## ABOUT ME
 
 I'm Hanz Geeratz, a Fractional CTO, Startup Scaling & Growth Consultant based in Hamburg, Germany. With over 20 years of experience, I excel at building and leading high-performing full-stack engineering teams.
 
@@ -22,7 +26,7 @@ I am open for freelance work, offering services in:
     - Data-Driven Product Development: Implementing strategies to leverage data for informed technical and product decisions.
     - Startup Tech Consulting: Offering expertise in launching and scaling tech products, including due diligence, fundraising, and M&A.
 
-⭐ SKILLS & EXPERTISE ⭐
+## SKILLS & EXPERTISE
 
     - Strategic Technical Leadership (CTO/VP Engineering)
     - High-Performing Team Leadership & Optimization (Scrum, XP)
