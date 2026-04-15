@@ -13,7 +13,7 @@ For the last four years, I served as CTO at Wunder Mobility, gaining extensive e
 
 Throughout my career, I've also been strategically involved in startup due diligence, funding rounds, and M&A transactions. I excel at smartly growing teams, optimizing and rightsizing them, and providing crisis solutions, including reorganizing engineering teams based on evolving business needs.
 
-## I am open for freelance work, offering services in
+## I am open for freelance work, offering services in:
 
     - CTO/VP Engineering as a Service: Providing strategic technical leadership for startups and growing companies.
     - High-Performing Team Leadership & Optimization: Building, mentoring, and reorganizing engineering teams for smart growth, efficiency, and crisis management.
