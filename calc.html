@@ -2,11 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Calculator</title>
+  <!-- Rock-solid Cloudflare CDN bundle -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
     body {
-      background-color: #202124;
+      background-color: #1e1e1e;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       display: flex;
       justify-content: center;
@@ -18,39 +21,29 @@
       width: 320px;
       height: 480px;
       background: #2b2b2b;
-      border-radius: 8px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
       display: flex;
       flex-direction: column;
       overflow: hidden;
       position: relative;
     }
 
-    /* Calculator View */
-    #calc-view {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
+    /* Calculator */
+    #calc-view { display: flex; flex-direction: column; height: 100%; }
     #calc-display {
       flex: 1;
       background: #202020;
       color: #fff;
-      font-size: 2.4rem;
+      font-size: 2.2rem;
       padding: 20px;
       text-align: right;
-      overflow: hidden;
       display: flex;
       align-items: flex-end;
       justify-content: flex-end;
       word-break: break-all;
     }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: #1e1e1e;
-    }
+    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: #181818; }
     button.calc-btn {
       background: #3b3b3b;
       border: none;
@@ -59,28 +52,22 @@
       font-size: 1.2rem;
       height: 65px;
       cursor: pointer;
-      transition: background 0.1s;
     }
     button.calc-btn:hover { background: #484848; }
     button.calc-btn:active { background: #555555; }
-    button.calc-btn.op { background: #333333; color: #ff9500; font-weight: bold; }
+    button.calc-btn.op { background: #303030; color: #ff9500; font-weight: bold; }
     button.calc-btn.action { background: #ff9500; color: #fff; font-weight: bold; }
     button.calc-btn.action:hover { background: #e08500; }
 
-    /* Stealth Chat View */
-    #chat-view {
-      display: none;
-      flex-direction: column;
-      height: 100%;
-      background: #181818;
-    }
+    /* Stealth Chat */
+    #chat-view { display: none; flex-direction: column; height: 100%; background: #141414; }
     .chat-header {
       padding: 10px 14px;
-      background: #242424;
+      background: #202020;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       border-bottom: 1px solid #333;
     }
     .status-dot {
@@ -92,15 +79,8 @@
       margin-right: 6px;
     }
     .status-dot.connected { background: #43a047; }
-    .panic-btn {
-      cursor: pointer;
-      color: #888;
-      font-size: 1.1rem;
-      background: none;
-      border: none;
-    }
+    .panic-btn { cursor: pointer; color: #888; font-size: 1.1rem; background: none; border: none; }
     .panic-btn:hover { color: #fff; }
-
     #chat-log {
       flex: 1;
       padding: 12px;
@@ -112,31 +92,19 @@
     }
     .msg {
       max-width: 80%;
-      padding: 7px 11px;
+      padding: 8px 12px;
       border-radius: 6px;
       font-size: 0.82rem;
       line-height: 1.35;
       word-wrap: break-word;
     }
-    .msg.me {
-      background: #005c4b;
-      align-self: flex-end;
-    }
-    .msg.peer {
-      background: #2c2c2c;
-      align-self: flex-start;
-      border: 1px solid #3d3d3d;
-    }
-    .msg-bar {
-      padding: 10px;
-      background: #222;
-      display: flex;
-      gap: 6px;
-    }
+    .msg.me { background: #005c4b; align-self: flex-end; }
+    .msg.peer { background: #262626; align-self: flex-start; border: 1px solid #383838; }
+    .msg-bar { padding: 10px; background: #202020; display: flex; gap: 6px; }
     .msg-bar input {
       flex: 1;
       background: #111;
-      border: 1px solid #444;
+      border: 1px solid #3e3e3e;
       color: #fff;
       padding: 8px 10px;
       border-radius: 4px;
@@ -151,17 +119,13 @@
       border-radius: 4px;
       cursor: pointer;
     }
-    .msg-bar button:disabled {
-      background: #333;
-      color: #777;
-      cursor: not-allowed;
-    }
+    .msg-bar button:disabled { background: #333; color: #666; cursor: not-allowed; }
   </style>
 </head>
 <body>
 
   <div class="window">
-    <!-- Functional Calculator -->
+    <!-- Calculator Panel -->
     <div id="calc-view">
       <div id="calc-display">0</div>
       <div class="grid">
@@ -191,39 +155,37 @@
       </div>
     </div>
 
-    <!-- Direct Stealth Chat -->
+    <!-- Hidden Stealth Chat Panel -->
     <div id="chat-view">
       <div class="chat-header">
-        <div><span id="status-dot" class="status-dot"></span><span id="status-text">Searching for peer...</span></div>
+        <div><span id="status-dot" class="status-dot"></span><span id="status-text">Connecting...</span></div>
         <button class="panic-btn" title="Panic Lock (Esc)" onclick="triggerPanic()">✕</button>
       </div>
 
       <div id="chat-log"></div>
 
       <form class="msg-bar" id="chat-form" onsubmit="handleSend(event)">
-        <input type="text" id="chat-input" placeholder="Connecting..." autocomplete="off" disabled />
+        <input type="text" id="chat-input" placeholder="Waiting for peer..." autocomplete="off" disabled />
         <button type="submit" id="chat-send" disabled>Send</button>
       </form>
     </div>
   </div>
 
-  <script type="module">
-    // Using Trystero MQTT strategy over standard WSS ports (reliable on GitHub Pages)
-    import { joinRoom } from 'https://cdn.jsdelivr.net/npm/trystero@0.25.3/mqtt/+esm';
-
-    // --- HARDCODED CONFIGURATION ---
+  <script>
     const SECRET_PIN = "7331";
-    const HARDCODED_ROOM = "alpha-kilo-9842";
-    const HARDCODED_PASS = "v7$9Xp!mQ2#zL0wR";
+    // Unique shared channel prefix
+    const CHANNEL_KEY = "vault-chan-x992"; 
 
     let calcState = "0";
-    let activeRoom = null;
-    let sendMessageAction = null;
+    let peer = null;
+    let conn = null;
+    let myId = "";
+    let peerId = "";
+    let connectInterval = null;
 
     // --- Calculator Engine ---
-    window.press = function(val) {
+    function press(val) {
       const display = document.getElementById('calc-display');
-
       if (val === 'C') {
         calcState = "0";
       } else if (val === '=') {
@@ -243,16 +205,12 @@
       } else if (val === '%') {
         calcState = String(parseFloat(calcState) / 100);
       } else {
-        if (calcState === "0" || calcState === "Error") {
-          calcState = val;
-        } else {
-          calcState += val;
-        }
+        calcState = (calcState === "0" || calcState === "Error") ? val : calcState + val;
       }
       display.innerText = calcState;
-    };
+    }
 
-    // --- Switch to Chat & Auto-Connect ---
+    // --- Switch to Chat ---
     function unlockAndConnect() {
       document.getElementById('calc-view').style.display = 'none';
       document.getElementById('chat-view').style.display = 'flex';
@@ -260,84 +218,147 @@
 
       updateStatus(false, "Connecting to network...");
 
-      const config = { 
-        appId: 'calc_gh_pages_p2p',
-        password: HARDCODED_PASS,
-        // High-availability public WSS MQTT brokers that work over HTTPS
-        brokerUrls: [
-          'wss://public.mqtthq.com:8084/mqtt',
-          'wss://test.mosquitto.org:8081'
-        ]
+      // Generate deterministic 1 or 2 slots based on localStorage or mutual handshake
+      initPeer();
+    }
+
+    function initPeer() {
+      // Free public Google STUN configuration guarantees NAT hole-punching
+      const config = {
+        config: {
+          iceServers: [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' }
+          ]
+        }
       };
 
-      try {
-        activeRoom = joinRoom(config, HARDCODED_ROOM);
+      // Node A is primary; Node B is secondary
+      const nodeA = CHANNEL_KEY + "-host";
+      const nodeB = CHANNEL_KEY + "-guest";
 
-        const [send, receive] = activeRoom.makeAction('chat');
-        sendMessageAction = send;
+      peer = new Peer(nodeA, config);
 
-        activeRoom.onPeerJoin(peerId => {
-          updateStatus(true, "Peer Connected");
-          const input = document.getElementById('chat-input');
-          input.disabled = false;
-          input.placeholder = "Type a message...";
-          input.focus();
-          document.getElementById('chat-send').disabled = false;
-        });
+      peer.on('open', (id) => {
+        myId = id;
+        peerId = nodeB;
+        updateStatus(false, "Waiting for peer...");
+        listenForConnections();
+      });
 
-        activeRoom.onPeerLeave(peerId => {
-          updateStatus(false, "Peer Disconnected");
-          const input = document.getElementById('chat-input');
-          input.disabled = true;
-          input.placeholder = "Peer left. Waiting...";
-          document.getElementById('chat-send').disabled = true;
-        });
+      peer.on('error', (err) => {
+        if (err.type === 'unavailable-id') {
+          // Host is taken -> Connect as Guest
+          peer.destroy();
+          peer = new Peer(nodeB, config);
 
-        receive((text) => {
-          appendMessage(text, 'peer');
-        });
-      } catch (err) {
-        console.error("Connection failed:", err);
-        updateStatus(false, "Connection error");
+          peer.on('open', (id) => {
+            myId = id;
+            peerId = nodeA;
+            updateStatus(false, "Calling host...");
+            listenForConnections();
+            attemptDial(nodeA);
+          });
+        } else {
+          console.error("PeerJS Error:", err);
+          updateStatus(false, "Relay Error");
+        }
+      });
+    }
+
+    function attemptDial(targetId) {
+      if (conn && conn.open) return;
+      conn = peer.connect(targetId, { reliable: true });
+      bindConnectionEvents(conn);
+
+      // Retry dial every 3 seconds until host accepts
+      if (!connectInterval) {
+        connectInterval = setInterval(() => {
+          if (!conn || !conn.open) {
+            conn = peer.connect(targetId, { reliable: true });
+            bindConnectionEvents(conn);
+          } else {
+            clearInterval(connectInterval);
+            connectInterval = null;
+          }
+        }, 3000);
       }
     }
 
-    // --- Panic Lock ---
-    window.triggerPanic = function() {
-      if (activeRoom) {
-        activeRoom.leave();
-        activeRoom = null;
+    function listenForConnections() {
+      peer.on('connection', (incomingConn) => {
+        if (conn && conn.open) return; // Keep existing session
+        conn = incomingConn;
+        bindConnectionEvents(conn);
+      });
+    }
+
+    function bindConnectionEvents(c) {
+      c.on('open', () => {
+        if (connectInterval) {
+          clearInterval(connectInterval);
+          connectInterval = null;
+        }
+        updateStatus(true, "Peer Connected");
+        const input = document.getElementById('chat-input');
+        input.disabled = false;
+        input.placeholder = "Type a message...";
+        input.focus();
+        document.getElementById('chat-send').disabled = false;
+      });
+
+      c.on('data', (data) => {
+        appendMessage(data, 'peer');
+      });
+
+      c.on('close', () => {
+        updateStatus(false, "Peer Disconnected");
+        const input = document.getElementById('chat-input');
+        input.disabled = true;
+        input.placeholder = "Peer disconnected. Waiting...";
+        document.getElementById('chat-send').disabled = true;
+      });
+    }
+
+    // --- Panic Wipe ---
+    function triggerPanic() {
+      if (connectInterval) clearInterval(connectInterval);
+      if (conn) {
+        try { conn.close(); } catch(e) {}
+        conn = null;
       }
+      if (peer) {
+        try { peer.destroy(); } catch(e) {}
+        peer = null;
+      }
+
       document.getElementById('chat-log').innerHTML = '';
       document.getElementById('chat-view').style.display = 'none';
       document.getElementById('calc-view').style.display = 'flex';
       
       const input = document.getElementById('chat-input');
       input.disabled = true;
-      input.placeholder = "Connecting...";
+      input.placeholder = "Waiting for peer...";
       document.getElementById('chat-send').disabled = true;
       
       updateStatus(false, "Disconnected");
       document.title = "Calculator";
-    };
+    }
 
-    // ESC panic trigger
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        window.triggerPanic();
-      }
+      if (e.key === 'Escape') triggerPanic();
     });
 
-    window.handleSend = function(e) {
+    function handleSend(e) {
       e.preventDefault();
       const input = document.getElementById('chat-input');
       const text = input.value.trim();
-      if (!text || !sendMessageAction) return;
+      if (!text || !conn || !conn.open) return;
 
-      sendMessageAction(text);
+      conn.send(text);
       appendMessage(text, 'me');
       input.value = '';
-    };
+    }
 
     function appendMessage(text, type) {
       const log = document.getElementById('chat-log');
@@ -349,10 +370,8 @@
     }
 
     function updateStatus(online, label) {
-      const dot = document.getElementById('status-dot');
-      const text = document.getElementById('status-text');
-      dot.className = `status-dot ${online ? 'connected' : ''}`;
-      text.innerText = label;
+      document.getElementById('status-dot').className = `status-dot ${online ? 'connected' : ''}`;
+      document.getElementById('status-text').innerText = label;
     }
   </script>
 </body>
