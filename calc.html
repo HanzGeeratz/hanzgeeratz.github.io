@@ -191,7 +191,7 @@
       </div>
     </div>
 
-    <!-- Direct Stealth Chat (No Setup Inputs) -->
+    <!-- Direct Stealth Chat -->
     <div id="chat-view">
       <div class="chat-header">
         <div><span id="status-dot" class="status-dot"></span><span id="status-text">Searching for peer...</span></div>
@@ -208,9 +208,10 @@
   </div>
 
   <script type="module">
-    import { joinRoom } from 'https://cdn.jsdelivr.net/npm/trystero@0.25.3/nostr/+esm';
+    // Using Trystero MQTT strategy over standard WSS ports (reliable on GitHub Pages)
+    import { joinRoom } from 'https://cdn.jsdelivr.net/npm/trystero@0.25.3/mqtt/+esm';
 
-    // --- HARDCODED CREDENTIALS ---
+    // --- HARDCODED CONFIGURATION ---
     const SECRET_PIN = "7331";
     const HARDCODED_ROOM = "alpha-kilo-9842";
     const HARDCODED_PASS = "v7$9Xp!mQ2#zL0wR";
@@ -253,48 +254,54 @@
 
     // --- Switch to Chat & Auto-Connect ---
     function unlockAndConnect() {
-  document.getElementById('calc-view').style.display = 'none';
-  document.getElementById('chat-view').style.display = 'flex';
-  document.title = "calc";
+      document.getElementById('calc-view').style.display = 'none';
+      document.getElementById('chat-view').style.display = 'flex';
+      document.title = "calc";
 
-  updateStatus(false, "Connecting to relay...");
+      updateStatus(false, "Connecting to network...");
 
-  const config = { 
-    appId: 'calc_stealth_p2p_v1',
-    password: HARDCODED_PASS,
-    relayUrls: [
-      'wss://relay.damus.io',
-      'wss://nos.lol',
-      'wss://relay.snort.social'
-    ]
-  };
+      const config = { 
+        appId: 'calc_gh_pages_p2p',
+        password: HARDCODED_PASS,
+        // High-availability public WSS MQTT brokers that work over HTTPS
+        brokerUrls: [
+          'wss://public.mqtthq.com:8084/mqtt',
+          'wss://test.mosquitto.org:8081'
+        ]
+      };
 
-  activeRoom = joinRoom(config, HARDCODED_ROOM);
+      try {
+        activeRoom = joinRoom(config, HARDCODED_ROOM);
 
-  const [send, receive] = activeRoom.makeAction('chat');
-  sendMessageAction = send;
+        const [send, receive] = activeRoom.makeAction('chat');
+        sendMessageAction = send;
 
-  activeRoom.onPeerJoin(peerId => {
-    updateStatus(true, "Peer Connected");
-    const input = document.getElementById('chat-input');
-    input.disabled = false;
-    input.placeholder = "Type a message...";
-    input.focus();
-    document.getElementById('chat-send').disabled = false;
-  });
+        activeRoom.onPeerJoin(peerId => {
+          updateStatus(true, "Peer Connected");
+          const input = document.getElementById('chat-input');
+          input.disabled = false;
+          input.placeholder = "Type a message...";
+          input.focus();
+          document.getElementById('chat-send').disabled = false;
+        });
 
-  activeRoom.onPeerLeave(peerId => {
-    updateStatus(false, "Peer Disconnected");
-    const input = document.getElementById('chat-input');
-    input.disabled = true;
-    input.placeholder = "Peer left. Waiting...";
-    document.getElementById('chat-send').disabled = true;
-  });
+        activeRoom.onPeerLeave(peerId => {
+          updateStatus(false, "Peer Disconnected");
+          const input = document.getElementById('chat-input');
+          input.disabled = true;
+          input.placeholder = "Peer left. Waiting...";
+          document.getElementById('chat-send').disabled = true;
+        });
 
-  receive((text) => {
-    appendMessage(text, 'peer');
-  });
-}
+        receive((text) => {
+          appendMessage(text, 'peer');
+        });
+      } catch (err) {
+        console.error("Connection failed:", err);
+        updateStatus(false, "Connection error");
+      }
+    }
+
     // --- Panic Lock ---
     window.triggerPanic = function() {
       if (activeRoom) {
@@ -314,7 +321,7 @@
       document.title = "Calculator";
     };
 
-    // Global ESC key triggers panic
+    // ESC panic trigger
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         window.triggerPanic();
