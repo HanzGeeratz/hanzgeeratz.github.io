@@ -208,7 +208,7 @@
   </div>
 
   <script type="module">
-    import { joinRoom } from 'https://cdn.jsdelivr.net/npm/trystero@0.25.3/+esm';
+    import { joinRoom } from 'https://cdn.jsdelivr.net/npm/trystero@0.25.3/nostr/+esm';
 
     // --- HARDCODED CREDENTIALS ---
     const SECRET_PIN = "7331";
@@ -253,44 +253,48 @@
 
     // --- Switch to Chat & Auto-Connect ---
     function unlockAndConnect() {
-      document.getElementById('calc-view').style.display = 'none';
-      document.getElementById('chat-view').style.display = 'flex';
-      document.title = "calc";
+  document.getElementById('calc-view').style.display = 'none';
+  document.getElementById('chat-view').style.display = 'flex';
+  document.title = "calc";
 
-      updateStatus(false, "Searching for peer...");
+  updateStatus(false, "Connecting to relay...");
 
-      const config = { 
-        appId: 'calc_stealth_p2p',
-        password: HARDCODED_PASS 
-      };
+  const config = { 
+    appId: 'calc_stealth_p2p_v1',
+    password: HARDCODED_PASS,
+    relayUrls: [
+      'wss://relay.damus.io',
+      'wss://nos.lol',
+      'wss://relay.snort.social'
+    ]
+  };
 
-      activeRoom = joinRoom(config, HARDCODED_ROOM);
+  activeRoom = joinRoom(config, HARDCODED_ROOM);
 
-      const [send, receive] = activeRoom.makeAction('chat');
-      sendMessageAction = send;
+  const [send, receive] = activeRoom.makeAction('chat');
+  sendMessageAction = send;
 
-      activeRoom.onPeerJoin(peerId => {
-        updateStatus(true, "Peer Connected");
-        const input = document.getElementById('chat-input');
-        input.disabled = false;
-        input.placeholder = "Type a message...";
-        input.focus();
-        document.getElementById('chat-send').disabled = false;
-      });
+  activeRoom.onPeerJoin(peerId => {
+    updateStatus(true, "Peer Connected");
+    const input = document.getElementById('chat-input');
+    input.disabled = false;
+    input.placeholder = "Type a message...";
+    input.focus();
+    document.getElementById('chat-send').disabled = false;
+  });
 
-      activeRoom.onPeerLeave(peerId => {
-        updateStatus(false, "Peer Disconnected");
-        const input = document.getElementById('chat-input');
-        input.disabled = true;
-        input.placeholder = "Peer left. Waiting...";
-        document.getElementById('chat-send').disabled = true;
-      });
+  activeRoom.onPeerLeave(peerId => {
+    updateStatus(false, "Peer Disconnected");
+    const input = document.getElementById('chat-input');
+    input.disabled = true;
+    input.placeholder = "Peer left. Waiting...";
+    document.getElementById('chat-send').disabled = true;
+  });
 
-      receive((text) => {
-        appendMessage(text, 'peer');
-      });
-    }
-
+  receive((text) => {
+    appendMessage(text, 'peer');
+  });
+}
     // --- Panic Lock ---
     window.triggerPanic = function() {
       if (activeRoom) {
